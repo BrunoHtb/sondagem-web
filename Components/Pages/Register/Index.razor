@@ -1,0 +1,62 @@
+﻿@page "/cadastro"
+@inject ApplicationDbContext Context
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<h1>Cadastros</h1>
+<a href="/cadastro/create" class="btn btn-primary">Novo Cadastro</a>
+
+@if(!Registers.Any())
+{
+    <p class="text-center">Carregando os Cadastros...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nome</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var register in Registers)
+            {
+                <tr>
+                    <td> @register.Id </td>
+                    <td> 
+                        <a href="/cadastro/@register.Id">
+                            @register.Name
+                        </a>
+                    </td>
+                    <td>
+                        <a href="/cadastro/edit/@register.Id" class="btn btn-primary"> Editar </a>
+                        &nbsp;&nbsp;
+                        <a href="/cadastro/delete/@register.Id" class="btn btn-danger"> Excluir </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    public IEnumerable<Register> Registers { get; set; } = Enumerable.Empty<Register>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Registers = await Context
+            .Registers
+            .AsNoTracking()
+            .OrderBy(x => x.Name)
+            .ToListAsync();
+        }
+        catch(Exception ex)
+        {
+            Console.Write(ex);
+        }
+    }
+}

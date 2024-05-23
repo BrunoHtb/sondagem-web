@@ -1,0 +1,33 @@
+﻿@page "/cadastro/{id:int}"
+@inject ApplicationDbContext Context
+@rendermode InteractiveServer
+
+@if (Model is null)
+{
+    <p class="text-center">Carregando os Cadastros...</p>
+}
+else
+{
+    <h1>@Model.Name (@Model.Id)</h1>
+
+    <EditForm Model="@Model">
+        <div class="mb-3">
+            <label class="form-label">Nome do Poço</label>
+            <InputText @bind-Value="Model.Name" class="form-control" readonly />
+        </div>
+
+        <a href="/cadastro">Voltar</a>
+    </EditForm>
+}
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+    public Register? Model { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model = await Context.Registers.AsNoTracking().FirstOrDefaultAsync(x => x.Id == Id);
+    }
+}
