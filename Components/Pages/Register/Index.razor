@@ -12,6 +12,15 @@
 }
 else
 {
+    @* <div>
+        <div class="form-group">
+            <label for="nameFilter">Nome:</label>
+            <input type="text" id="nameFilter" @bind="nameFilter" class="form-control" placeholder="Filtrar por nome" />
+        </div>
+        
+        <button class="btn btn-primary" @onclick="ApplyFilters">Aplicar Filtros</button>
+    </div> *@
+
     <table class="table">
         <thead>
             <tr>
@@ -43,6 +52,8 @@ else
 
 @code {
     public IEnumerable<Register> Registers { get; set; } = Enumerable.Empty<Register>();
+    private string nameFilter = string.Empty;
+    private string regionalFilter = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -58,5 +69,32 @@ else
         {
             Console.Write(ex);
         }
+    }
+    private async Task LoadRegistersAsync()
+    {
+        try
+        {
+            var query = Context.Registers.AsNoTracking().AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(nameFilter))
+            {
+                query = query.Where(x => x.Name.Contains(nameFilter));
+            }
+
+            if (!string.IsNullOrWhiteSpace(regionalFilter))
+            {
+                query = query.Where(x => x.Regional.Contains(regionalFilter));
+            }
+
+            Registers = await query.OrderBy(x => x.Name).ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+    private async Task ApplyFilters()
+    {
+        //await LoadRegistersAsync();
     }
 }

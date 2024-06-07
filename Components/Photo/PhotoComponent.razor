@@ -1,0 +1,40 @@
+﻿<div>
+    @if (photos != null)
+    {
+        <div class="row">
+            @foreach (var photo in photos)
+            {
+                <div class="col-md-4 mb-3">
+                    <img src="@photo" class="img-fluid" alt="Foto" />
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>Carregando fotos...</p>
+    }
+</div>
+
+@code {
+    private List<string> photos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Aqui você deve chamar o método para buscar as fotos via FTP
+        // Estou simulando com uma lista de URLs
+        photos = await LoadPhotosFromFtp();
+    }
+
+    private async Task<List<string>> LoadPhotosFromFtp()
+    {
+        // Exemplo de URLs simuladas
+        await Task.Delay(1000); // Simulando uma chamada async
+        return new List<string>
+        {
+            "https://via.placeholder.com/150",
+            "https://via.placeholder.com/150",
+            "https://via.placeholder.com/150"
+        };
+    }
+}

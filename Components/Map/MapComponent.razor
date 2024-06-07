@@ -1,0 +1,28 @@
+﻿@using Microsoft.JSInterop
+
+@inject IJSRuntime JSRuntime
+
+<div id="map" style="height: 600px; width: 100%;"></div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Exemplo de dados que você pode passar para o JavaScript
+            var markers = new List<MarkerData>
+            {
+                new MarkerData { Lat = 51.505, Lng = -0.09, Name = "Ponto 1" },
+                new MarkerData { Lat = 51.515, Lng = -0.1, Name = "Ponto 2" }
+            };
+            await JSRuntime.InvokeVoidAsync("initializeMap", markers);
+        }
+    }
+
+    public class MarkerData
+    {
+        public double Lat { get; set; }
+        public double Lng { get; set; }
+        public string Name { get; set; }
+    }
+}
