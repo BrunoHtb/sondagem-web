@@ -7,10 +7,11 @@
         lngSum = marker.lng;
     });
 
-    var map = L.map('map').setView([latSum, lngSum], 15);
+    var map = L.map('map').setView([latSum, lngSum], 13);
 
-    L.tileLayer('http://{s}.google.com/vt?lyrs=s,h&x={x}&y={y}&z={z}', {
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     markers.forEach(marker => {

@@ -122,14 +122,18 @@ else
                 </div>
             </div>
             <div class="col-md-5 d-flex flex-column">
-                <div class="flex-fill mb-4">
-                    @if (Model != null && Model.Id != 0)
-                    {
-                        <MapComponent Model="@Model" />
-                    }
+                <div class="flex-fill mb-6" style="height: 80%;">
+                @if (Model != null && Model.Id != 0)
+                {
+                    <MapComponent Model="@Model" />
+                }
                 </div>
-                <div class="flex-fill">
-                    <PhotoComponent />
+                <div class="flex-fill mt-3" style=" height: 80%;">
+                @if (Model != null && Model.Id != 0)
+                {
+                    NomeDiretorio = Model.Name + "_" + Model.Rodovia;
+                    <PhotoComponent NomeFotos="@Model.NomeFoto" NomeDiretorio="@NomeDiretorio" />
+                }
                 </div>
             </div>
         </div>
@@ -144,6 +148,7 @@ else
     public IEnumerable<Regional> Regional { get; set; } = Enumerable.Empty<Regional>();
     public List<string> Camadas { get; set; } = new();
     public List<string> Espessuras { get; set; } = new();
+    public string NomeDiretorio = string.Empty;
     private bool modelLoaded = false;
 
     protected override async Task OnInitializedAsync()
