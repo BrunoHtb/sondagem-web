@@ -2,18 +2,22 @@
 
 @inject IJSRuntime JSRuntime
 
-<div id="map" style="height: 600px; width: 100%;"></div>
+<div id="map" style="height: 100%; width: 100%;"></div>
 
 @code {
+    [Parameter]
+    public Register Model { get; set; }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            // Exemplo de dados que você pode passar para o JavaScript
+            double latitude = Convert.ToDouble(Model.Latitude);
+            double longitude = Convert.ToDouble(Model.Longitude);
+
             var markers = new List<MarkerData>
             {
-                new MarkerData { Lat = 51.505, Lng = -0.09, Name = "Ponto 1" },
-                new MarkerData { Lat = 51.515, Lng = -0.1, Name = "Ponto 2" }
+                new MarkerData { Lat = latitude, Lng = longitude, Name = Model.Name },
             };
             await JSRuntime.InvokeVoidAsync("initializeMap", markers);
         }

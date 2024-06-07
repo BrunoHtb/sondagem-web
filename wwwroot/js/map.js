@@ -1,11 +1,22 @@
 ﻿window.initializeMap = (markers) => {
-    var map = L.map('map').setView([51.505, -0.09], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    var latSum = 0;
+    var lngSum = 0;
+
+    markers.forEach(marker => {
+        latSum = marker.lat;
+        lngSum = marker.lng;
+    });
+
+    var map = L.map('map').setView([latSum, lngSum], 15);
+
+    L.tileLayer('http://{s}.google.com/vt?lyrs=s,h&x={x}&y={y}&z={z}', {
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
     }).addTo(map);
 
     markers.forEach(marker => {
-        L.marker([marker.lat, marker.lng]).addTo(map);
+        var popupContent = '<b>' + marker.name + '</b>';
+
+        L.marker([marker.lat, marker.lng]).addTo(map).bindPopup(popupContent);
     });
 };
 

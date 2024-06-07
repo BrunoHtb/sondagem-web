@@ -111,14 +111,22 @@ else
                         </div>
 
 
-                        <button type="submit" class="btn btn-primary">Atualizar</button>
-                        <a href="/cadastro">Cancelar</a>
+                        <div class="row">
+                            <div class="col-md-12 text-end mb-3">
+                                <a href="/cadastro" class="btn btn-secondary me-4">Cancelar</a>
+                                <button type="submit" class="btn btn-primary">Atualizar</button>
+
+                            </div>
+                        </div>
                     </EditForm>
                 </div>
             </div>
             <div class="col-md-5 d-flex flex-column">
                 <div class="flex-fill mb-4">
-                    <MapComponent />
+                    @if (Model != null && Model.Id != 0)
+                    {
+                        <MapComponent Model="@Model" />
+                    }
                 </div>
                 <div class="flex-fill">
                     <PhotoComponent />
@@ -129,7 +137,6 @@ else
 }
 
 @code {
-
     [Parameter]
     public int Id { get; set; } 
     public Register? Model {get; set; } = new();
@@ -137,14 +144,19 @@ else
     public IEnumerable<Regional> Regional { get; set; } = Enumerable.Empty<Regional>();
     public List<string> Camadas { get; set; } = new();
     public List<string> Espessuras { get; set; } = new();
+    private bool modelLoaded = false;
 
     protected override async Task OnInitializedAsync()
     {
-        Model = await Context.Registers.AsNoTracking().FirstOrDefaultAsync(x => x.Id == Id);
-        Lots = await Context.Lots.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
-        Regional = await Context.Regionals.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
-        Camadas = Model?.Camadas?.Split(';').ToList() ?? new List<string>();
-        Espessuras = Model?.Espessuras?.Split(';').ToList() ?? new List<string>();
+        if (!modelLoaded)
+        {
+            Model = await Context.Registers.AsNoTracking().FirstOrDefaultAsync(x => x.Id == Id);
+            Lots = await Context.Lots.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
+            Regional = await Context.Regionals.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
+            Camadas = Model?.Camadas?.Split(';').ToList() ?? new List<string>();
+            Espessuras = Model?.Espessuras?.Split(';').ToList() ?? new List<string>();
+            modelLoaded = true;
+        }
     }
 
     public async Task OnValidSubmit()
